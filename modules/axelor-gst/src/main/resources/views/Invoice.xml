@@ -1,0 +1,198 @@
+<object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+	<selection name="invoice-status-selection">
+		<option value="draft" order="1">Draft</option>
+		<option value="validated" order="2">Validated</option>
+		<option value="paid" order="3">Paid</option>
+		<option value="cancelled" order="4">Cancelled</option>
+	</selection>
+
+
+	<kanban columnBy="status" model="com.axelor.app.gst.db.Invoice" sequenceBy="priority" title="Kanban Invoice" name="invoice-kanban">
+		<field name="status" />
+		<field name="company" />
+		<field name="reference" />
+		<field name="invoiceDate" />
+		<field name="priority" />
+		<field name="party" />
+		<field name="partyContact" />
+		<field name="invoiceAddress" />
+		<field name="shippingAddress" title="Shipping Address" />
+		<field name="netAmount" />
+		<field name="netIgst" />
+		<field name="netCgst" />
+		<field name="netSgst" />
+		<field name="grossAmount" />
+		<field name="invoiceLine" />
+		<template><![CDATA[
+	 			<div>
+	 			 <h4>{{company.name}}</h4>
+	 			 <strong>{{party.name}}</strong><br>
+	 			 {{grossAmount}}		  
+					  </div>
+	 		]]></template>
+
+	</kanban>
+
+	<grid model="com.axelor.app.gst.db.Invoice" title="Invoices" name="invoice-grid">
+		<field name="status" />
+		<field name="company" />
+		<field name="reference" />
+		<field name="invoiceDate" />
+		<field name="priority" />
+		<field name="party" />
+		<field name="partyContact" />
+		<field name="invoiceAddress" />
+		<field name="shippingAddress" title="Shipping Address" />
+		<field name="netAmount" />
+		<field name="netIgst" />
+		<field name="netCgst" />
+		<field name="netSgst" />
+		<field name="grossAmount" />
+		<field name="invoiceLine" />
+	</grid>
+
+
+	<form model="com.axelor.app.gst.db.Invoice" title="Invoices" name="invoice-form" onNew="invoice.action.record,action.method.create.invoice.item.list">
+
+		<toolbar>
+			<button onClick="invoice_report" name="print-btn" title="Print Invoice" icon="fa-print" />
+		</toolbar>
+
+		<panel title="Invoice">
+
+			<field name="status" widget="NavSelect" colSpan="8" />
+			<field name="reference" colSpan="4" />
+			<field name="invoiceDate" />
+			<field name="priority" />
+			<field name="company" onChange="action.group.invoice.invoiceAddress.onChange,action.group.netCalculation"/>
+			<field name="party" onChange="invoice.action.group,action.group.netCalculation,action.method.onchange.state.updateInvoiceLine" />
+			<field name="partyContact" domain="self.party = :party" />
+			<field name="shippingAddress" title="Shipping Address" domain="self.party = :party" onChange="action.group.invoice.invoiceAddress.onChange"/>
+			<field name="invoiceAddress" domain="self.party = :party" onChange="action.group.invoice.invoiceAddress.onChange" />
+			<field name="useInvoiceAddressAsShipping" title="Use Invoice Address As Shipping" onChange="action.attr.shiping.address,action.group.netCalculation" />
+			<field name="netAmount" readonly="true" />
+			<field name="netIgst" />
+			<field name="netCgst" />
+			<field name="netSgst" />
+			<field name="grossAmount" readonly="true" />
+		</panel>
+
+		<panel-related field="invoiceItems" onChange="action.group.netCalculation" />
+
+		<panel sidebar="true">
+			<button onClick="test.action" name="btn-darft" title="Return Darft" showIf="status=='cancelled'"/>
+			<button onClick="action.group.onChange.validated" name="btn-validated" title="Validated" 
+			showIf="company != null &amp;&amp; party != null"/>
+			
+			<button onClick="action.attr.paid,test.padi" name="btn-paid" title="Paid" css="btn-success" icon="fa-check-circle" showIf="status=='validated'"/>
+			<button onClick="action.validate.btn.cancel,action.attr.cancelled,test.cancel" name="btn-cancel" title="Cancel" 
+			css="btn-danger" icon="fa-times" hideIf="status=='cancelled'"/>
+		</panel>
+	</form>
+	
+	<action-attrs name="action.attr.onclick.validated">
+		<attribute name="hidden" for="btn-validated" expr="true"/>
+	</action-attrs>
+	<action-attrs name="action.attr.onclick.paid">
+		<attribute name="hidden" for="btn-validated" expr="true"/>
+		<attribute name="hidden" for="btn-paid" expr="true"/>
+	</action-attrs>
+	<action-attrs name="test.cancel">
+		<attribute name="hidden" for="btn-validated" expr="true"/>
+	</action-attrs>
+
+
+	<action-record name="invoice.action.record" model="com.axelor.app.gst.db.Invoice">
+		<field name="invoiceDate" expr="eval: __datetime__" />
+		<field name="company" expr="eval:__user__.company" />
+	</action-record>
+
+	<action-group name="invoice.action.group">
+		<action name="set.invoice.party.contact" />
+		<action name="set.invoice.party.address" />
+	</action-group>
+
+	<action-group name="action.group.invoice.invoiceAddress.onChange">
+		<action name="action.method.onchange.state.updateInvoiceLine" />
+		<action name="action.group.netCalculation"/>
+	</action-group>
+	
+	<action-group name="action.group.netCalculation">
+		<action name="action.method.calculate.netSgst"/>
+		<action name="action.method.calculate.netAmount"/>
+		<action name="action.method.calculate.netGrossAmount"/>
+		<action name="action.method.calculate.netIgst"/>
+	</action-group>
+	
+	<action-group name="action.group.onChange.validated">
+		<action name="action.attr.validated"/>
+		<action name="action.method.set.invoice.reference"/>
+		<action name="action.attr.onclick.validated"/>
+	</action-group>
+	
+	<action-method name="set.invoice.party.contact">
+		<call class="com.axelor.app.gst.web.InvoiceController" method="SetPartyContactPrimary" />
+	</action-method>
+	<action-method name="set.invoice.party.address">
+		<call class="com.axelor.app.gst.web.InvoiceController" method="SetPartyAddress" />
+	</action-method>
+	
+
+	<action-attrs name="action.attr.shiping.address">
+		<attribute name="hidden" for="shippingAddress" expr="" if="useInvoiceAddressAsShipping" />
+		<attribute name="value" for="shippingAddress" expr="eval:__this__.invoiceAddress" />
+	</action-attrs>
+
+	<action-method name="action.method.onchange.state.updateInvoiceLine">
+		<call class="com.axelor.app.gst.web.InvoiceController" method="UpdateInvoiceLine" />
+	</action-method>
+
+	<action-attrs name="test.action">
+		<attribute name="value" for="status" expr="draft" />
+	</action-attrs>
+	<action-attrs name="action.attr.validated">
+		<attribute name="value" for="status" expr="validated" />
+	</action-attrs>
+	<action-attrs name="action.attr.paid">
+		<attribute name="value" for="status" expr="paid" />
+	</action-attrs>
+
+	<action-attrs name="action.attr.cancelled">
+		<attribute name="value" for="status" expr="cancelled" />
+	</action-attrs>
+
+	<action-validate name="action.validate.btn.cancel">
+		<alert message="Are you really want to Cancel" />
+		<error message="Status Already Cancelled" if="status=='cancelled'" />
+	</action-validate>
+
+	<action-report output="Invoice" name="invoice_report" design="invoice_report.rptdesign">
+		<param name="invoiceId" expr="eval:id" />
+	</action-report>
+
+	<action-method name="action.method.set.invoice.reference">
+		<call class="com.axelor.app.gst.web.InvoiceController" method="setInvoiceReference" if="__this__.reference == null"/>
+	</action-method>
+	
+	<action-method name="action.method.calculate.netSgst">
+		<call class="com.axelor.app.gst.web.InvoiceController" method="calculateNetSgst"/>
+	</action-method>
+	<action-method name="action.method.calculate.netAmount">
+		<call class="com.axelor.app.gst.web.InvoiceController" method="calculateNetAmount"/>
+	</action-method>
+	<action-method name="action.method.calculate.netGrossAmount">
+		<call class="com.axelor.app.gst.web.InvoiceController" method="netGrossAmount"/>
+	</action-method>
+	<action-method name="action.method.calculate.netIgst">
+		<call class="com.axelor.app.gst.web.InvoiceController" method="netIgst"/>
+	</action-method>
+	
+	<action-method name="action.method.create.invoice.item.list">
+		<call class="com.axelor.app.gst.web.InvoiceController" method="createInvoiceLineItems"/>
+	</action-method>
+	
+</object-views>
+  

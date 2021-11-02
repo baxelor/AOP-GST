@@ -1,0 +1,138 @@
+<object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+	<chart name="chart.invoice.unpaid.customer" title="Unpaid Invoic Per Customer" onInit="action.date.onLoad">
+		<search-fields>
+			<field type="datetime" name="fromDate" title="From Date" />
+			<field type="datetime" name="toDate" title="To Date" />
+		</search-fields>
+		<dataset type="sql"> 
+			  <![CDATA[
+			select
+				party."name" as customer,
+				count(invoice.id) as invoices
+			from
+				gst_invoice as invoice
+				left join gst_party as party on
+				invoice.party = party.id
+			where
+				invoice.status in ('draft','validated')
+				and invoice.invoice_date between DATE(:fromDate) and DATE(:toDate)
+			group by
+				party.id
+			  ]]>
+		</dataset>
+		<category key="customer" type="number" title="Customer" />
+		<series key="invoices" type="bar" title="Invoice" />
+	</chart>
+
+
+	<chart name="chart.invoice.paid.product.categories" title="Paid Invoic Per Categories" onInit="action.date.onLoad">
+		<search-fields>
+			<field type="datetime" name="fromDate" title="From Date" />
+			<field type="datetime" name="toDate" title="To Date" />
+		</search-fields>
+		<dataset type="sql"> 
+			  <![CDATA[
+			select
+				count(gp.productcategories) as category,
+				gpc."name" as categoryname
+			from
+				gst_product gp
+			left join gst_product_category gpc on
+				gpc.id = gp.productcategories
+			left join gst_invoice_line as invoiceline on
+				invoiceline.product = gp.id
+			left join gst_invoice as invoice on
+				invoice.id = invoiceline.invoice
+			where
+				invoice.status = 'paid'
+			group by
+				gpc.name
+			  ]]>
+		</dataset>
+		<category key="categoryname" type="number" title="Product Category" />
+		<series key="category" type="bar" title="Invoice" />
+	</chart>
+
+	<chart name="chart.party.per state" title="Parties per State" onInit="action.purchase.chart">
+		<dataset type="sql"> 
+			  <![CDATA[
+			select
+				count(gp."name") as partyname,
+				state."name" as states
+			from
+				gst_party gp
+			left join gst_address as address on
+				address.party = gp.id
+			left join gst_state as state on
+				address.states = state.id
+			group by
+				state."name"
+
+			  ]]>
+		</dataset>
+		<category key="states" type="number" title="State" />
+		<series key="partyname" type="pie" title="Party" />
+	</chart>
+
+	<chart name="chart.invoice.per.status.line" title="Invoice Per Status" onInit="action.purchase.chart">
+		<dataset type="sql"> 
+			  <![CDATA[
+			select
+				count(invoice.id) as invoices,
+				invoice.status as status
+			from
+				gst_invoice as invoice
+			group by
+				invoice.status
+
+			  ]]>
+		</dataset>
+		<category key="status" type="number" title="Status" />
+		<series key="invoices" type="line" title="Invoices" />
+	</chart>
+
+	<chart name="chart.invoice.per.status.bar" title="Invoice Per Status" onInit="action.purchase.chart">
+		<dataset type="sql"> 
+			  <![CDATA[
+			select
+				count(invoice.id) as invoices,
+				invoice.status as status
+			from
+				gst_invoice as invoice
+			group by
+				invoice.status
+
+			  ]]>
+		</dataset>
+		<category key="status" type="number" title="Status" />
+		<series key="invoices" type="bar" title="Invoices" />
+	</chart>
+
+	<grid model="com.axelor.app.gst.db.Invoice" title="Invoices" name="invoice-grid">
+		<field name="status" />
+		<field name="company" />
+		<field name="reference" />
+		<field name="invoiceDate" />
+		<field name="priority" />
+		<field name="party" />
+		<field name="partyContact" />
+		<field name="invoiceAddress" />
+		<field name="shippingAddress" title="Shipping Address" />
+		<field name="netAmount" />
+		<field name="netIgst" />
+		<field name="netCgst" />
+		<field name="netSgst" />
+		<field name="grossAmount" />
+		<field name="invoiceLine" />
+	</grid>
+	
+	<action-attrs name="action.date.onLoad">
+		<attribute name="value" for="fromDate" expr="eval:__datetime__.withDayOfMonth(1)"/>
+		<attribute name="value" for="toDate" expr="eval:__datetime__"/>
+	</action-attrs>
+
+
+</object-views>

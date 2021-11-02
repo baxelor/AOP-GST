@@ -1,0 +1,3 @@
+code,name,HSBN,costPrice,salePrice,productcategories.code,productcategories.name,productcategories.gstRate
+dm,Demo,123456789,20,25,ET,Electronics,5
+dm2,Demo2,232323,50,52

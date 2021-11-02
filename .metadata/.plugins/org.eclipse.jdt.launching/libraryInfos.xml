@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<libraryInfos>
+<libraryInfo home="/var/home/axelor/opt/jdk-8" version="1.8.0_292">
+<bootpath>
+<entry path="/var/home/axelor/opt/jdk-8/jre/lib/resources.jar"/>
+<entry path="/var/home/axelor/opt/jdk-8/jre/lib/rt.jar"/>
+<entry path="/var/home/axelor/opt/jdk-8/jre/lib/sunrsasign.jar"/>
+<entry path="/var/home/axelor/opt/jdk-8/jre/lib/jsse.jar"/>
+<entry path="/var/home/axelor/opt/jdk-8/jre/lib/jce.jar"/>
+<entry path="/var/home/axelor/opt/jdk-8/jre/lib/charsets.jar"/>
+<entry path="/var/home/axelor/opt/jdk-8/jre/lib/jfr.jar"/>
+<entry path="/var/home/axelor/opt/jdk-8/jre/classes"/>
+</bootpath>
+<extensionDirs>
+<entry path="/var/home/axelor/opt/jdk-8/jre/lib/ext"/>
+<entry path="/usr/java/packages/lib/ext"/>
+</extensionDirs>
+<endorsedDirs>
+<entry path="/var/home/axelor/opt/jdk-8/jre/lib/endorsed"/>
+</endorsedDirs>
+</libraryInfo>
+</libraryInfos>

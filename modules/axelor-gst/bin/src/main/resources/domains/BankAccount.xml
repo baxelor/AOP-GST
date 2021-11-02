@@ -1,0 +1,18 @@
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models
+  http://axelor.com/xml/ns/domain-models/domain-models_5.4.xsd">
+
+ <module name="gst" package="com.axelor.app.gst.db"/>
+
+  <entity name="BankAccount">
+  	<string name="type" default="current"/>
+  	<string name="bank" required="true"/>
+  	<string name="accountNo" required="true"/>
+  	<string name="IFSC" required="true"/>
+  	<string name="address"/>
+  	
+  		<many-to-one ref="com.axelor.app.gst.db.Company" name="company"/>
+  </entity>
+
+</domain-models>

@@ -1,0 +1,17 @@
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+  	<grid model="com.axelor.app.gst.db.Country" title="Countries" name="country-grid">
+  		<field name="name" title="Country Name"/>
+  		<field name="code" title="Country Code"/>
+  	</grid>
+  
+  	<form model="com.axelor.app.gst.db.Country" title="Countries" name="country-form">
+  		<panel title="Add Country">
+  			<field name="name" title="Country Name"/>
+  		<field name="code" title="Country Code"/>
+  		</panel>
+  	</form>
+  	
+  </object-views>

@@ -1,0 +1,61 @@
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+  
+  	<grid model="com.axelor.app.gst.db.Company" title="Companies" name="company-grid">
+  		<field name="name"/>
+  		<field name="GSTIN"/>
+  		<field name="contact"/>
+  		<field name="bankDetails"/>
+  	</grid>
+  	
+  	<form model="com.axelor.app.gst.db.Company" title="Compines" name="company-form">
+  	
+  	
+  		<panel title="Company Details"> 			
+  				<field name="logo" widget="image" title="Company Logo" colSpan="7"/>
+  				<field name="name" />
+  				<field name="GSTIN"  title="GSTIN"/>
+  		</panel>
+  		
+  		<panel title="Contact Details">
+  		<field name="contact" title="Phone/Email" colSpan="12">
+  			<editor x-show-titles="false">
+  				<field name="type"/>
+  				<field name="name"/>
+  				<field name="primaryPhone" widget="phone" x-only-countries = "IN"/>
+  				<field name="secondaryPhone" widget="phone" x-only-countries = "IN"/>
+  				<field name="primaryEmail" widget="email"/>
+  				<field name="secondaryEmail" widget="email"/>
+  			</editor>
+  		</field>
+  		
+  		<field name="address" colSpan="12">
+  			<editor x-show-titles="false">
+  				<field name="type"/>
+  				<field name="line1"/>
+  				<field name="line2"/>
+  				<field name="cites"/>
+  				<field name="states"/>
+  				<field name="countries"/>
+  				<field name="pinCode"/>
+  			</editor>
+  		</field>
+  		</panel>
+  		
+  		<panel title="Bank Details">
+  		 <field name="bankDetails" colSpan="12">
+  			<editor x-show-titles="false">
+  				<field name="type"/>
+	  			<field name="bank"/>
+	  			<field name="accountNo"/>
+	  			<field name="IFSC" title="IFSC"/>
+	  			<field name="address" widget="text" colSpan="30"/>
+  			</editor>
+  			</field>
+  		</panel>
+  	
+  	</form>
+  	
+  </object-views>

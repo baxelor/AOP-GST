@@ -1,0 +1,14 @@
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models
+  http://axelor.com/xml/ns/domain-models/domain-models_5.4.xsd">
+
+  <module name="gst" package="com.axelor.app.gst.db"/>
+
+  <entity name="State">
+  	<string name="name" unique="true" required="true"/>
+  	
+  					<many-to-one ref="com.axelor.app.gst.db.Country" name="countries"/>
+  </entity>
+
+</domain-models>

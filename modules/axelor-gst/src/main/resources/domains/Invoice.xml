@@ -1,0 +1,28 @@
+<domain-models xmlns="http://axelor.com/xml/ns/domain-models"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/domain-models
+  http://axelor.com/xml/ns/domain-models/domain-models_5.4.xsd">
+
+ <module name="gst" package="com.axelor.app.gst.db"/>
+
+  <entity name="Invoice">
+  		<string name="status" readonly="true" selection="invoice-status-selection" default="draft"/>
+  		<string name="reference" readonly="true"/>
+  		<datetime name="invoiceDate" title="Date"/>
+  		<integer name="priority"/>
+  		<boolean name="useInvoiceAddressAsShipping"/>
+  		<decimal name="netAmount" readonly="true"/>
+  		<decimal name="netIgst" readonly="true" title="Net IGST"/>
+  		<decimal name="netCgst" readonly="true" title="Net CGST"/>
+  		<decimal name="netSgst" readonly="true" title="Net SGST"/>
+  		<decimal name="grossAmount" readonly="true"/>
+  		
+  			<many-to-one ref="com.axelor.app.gst.db.Company" name="company" required="true" default="Company"/>
+  				<many-to-one ref="com.axelor.app.gst.db.Party" name="party" required="true"/>
+  					<many-to-one ref="com.axelor.app.gst.db.Contact" name="partyContact"/>
+  						<many-to-one ref="com.axelor.app.gst.db.Address" name="invoiceAddress" required="true"/>
+  							<many-to-one ref="com.axelor.app.gst.db.Address" name="shippingAddress"/>
+  								<one-to-many ref="com.axelor.app.gst.db.InvoiceLine" name="invoiceItems" mappedBy="invoice"/>
+  </entity>
+
+</domain-models>

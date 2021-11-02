@@ -1,0 +1,18 @@
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+  
+  	<grid model="com.axelor.app.gst.db.State" title="States" name="state-grid">
+  		<field name="name" title="State"/>
+  		<field name="countries"/>
+  	</grid>
+  	
+  	<form model="com.axelor.app.gst.db.State" title="States" name="state-form">
+  		<panel title="Add State">
+  			<field name="name" title="State"/>
+  		<field name="countries" title="Country" widget="suggestBox"/>
+  		</panel>
+  	</form>
+  	
+  </object-views>

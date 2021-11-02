@@ -1,0 +1,97 @@
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+  	
+  		
+  	
+  		<selection name="tparty-type-selection">
+  			<option value="individual">Individual</option>
+  			<option value="company">Company</option>
+  		</selection>
+  		
+  		<selection name="contact-type selection">
+  			<option value="primary">Primary</option>
+  			<option value="secondary">Secondary</option>
+			<option value="others">Others</option>
+  		</selection>
+  		
+  		<cards  model="com.axelor.app.gst.db.Party" title="Party Cards" name="party-card">
+  			<field name="reference"/>
+	  		<field name="name"/>
+	  		<field name="type"/>
+	  		<field name="customer"/>
+	  		<field name="supplier"/>
+	  		<field name="GSTIN" title="GSTIN"/>
+	  		<field name="contact"/>
+	  		<field name="address"/>
+  			
+  			<template><![CDATA[
+  				<div class="span8">
+  					<h3><strong>{{name}}</strong></h3>
+  				</div>
+  				<div class="span8">
+				    <address>
+				      <strong>{{address.line1}},{{address.line2}}</strong><br>
+				     {{address.cites.name}}<span ng-if="address.pinCode"> - {{address.pinCode}}</span><br>
+				     <span ng-if="address.states.name"> {{address.states.name}},</span>
+				     {{address.countries.name}}<br>
+				     Address Type:{{address.type}}
+				    </address>
+			  </div>
+  			]]></template>
+  		</cards>
+  	
+  	
+  	<grid model="com.axelor.app.gst.db.Party" title="Parties" name="party-grid">
+  		<field name="reference"/>
+  		<field name="name"/>
+  		<field name="type"/>
+  		<field name="customer"/>
+  		<field name="supplier"/>
+  		<field name="GSTIN" title="GSTIN"/>
+  		<field name="contact"/>
+  		<field name="address"/>
+  	</grid>
+  	
+  	<form model="com.axelor.app.gst.db.Party" title="Parties" name="party-form" onSave="action.party.set.reference">
+  		<panel title="Overview">
+  			<field name="reference" readonly="true"/>
+	  		<field name="name"/>
+	  		<field name="type" selection="tparty-type-selection"/>
+	  		<field name="GSTIN" title="GSTIN"/>
+	  		<field name="customer"/>
+	  		<field name="supplier"/>
+  		</panel>
+  		
+  		<panel title="Contact">
+  			<field name="contact" colSpan="12">
+  				<editor x-show-titles="false">
+  					<field name="name"/>
+			  		<field name="type" selection="contact-selection-type"/>
+			  		<field name="primaryPhone" widget="phone" x-only-countries="IN"/>
+			  		<field name="secondaryPhone" widget="phone" x-only-countries="IN"/>
+			  		<field name="primaryEmail" widget="email"/>
+			  		<field name="secondaryEmail" widget="email"/>
+		  		</editor>
+  			</field>
+  			
+  			<field name="address" colSpan="12">
+  				<editor x-show-titles="false">
+  					<field name="type"/>
+  					<field name="line1"/>
+  					<field name="line2"/>
+  					<field name="cites"  title="City" />
+  					<field name="states" title="State"/>
+  					<field name="countries" title="Country"/>
+  					<field name="pinCode"/>
+  				</editor>
+  			</field>
+  		</panel>
+  	</form>
+
+  	<action-method name="action.party.set.reference">
+  		<call class="com.axelor.app.gst.web.PartyController" method="setPartyReference" if="__this__.reference !=null"/>
+  	</action-method>
+  
+  </object-views>

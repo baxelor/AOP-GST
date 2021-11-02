@@ -1,0 +1,78 @@
+<object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+	<cards model="com.axelor.app.gst.db.Product" title="Product Cards" name="product-card">
+		<field name="name" />
+		<field name="code" />
+		<field name="HSBN" title="HSBN" />
+		<field name="productcategories" title="Category" />
+		<field name="salePrice" />
+		<field name="costPrice" />
+		<field name="gstRate" title="GST Rate" />
+		<template><![CDATA[
+  			<div class="span8">
+  				<strong>{{name}}</strong>
+  			</div> 		
+  		]]></template>
+	</cards>
+
+	<grid model="com.axelor.app.gst.db.Product" title="Products" name="product-grid">
+
+		<toolbar>
+			<button onClick="action.view.selected.product" name="create-btn" title="Create" />
+			<button onClick="product_report_grid" name="print-btn" icon="fa-print" />
+		</toolbar>
+
+		<field name="name" />
+		<field name="code" />
+		<field name="HSBN" title="HSBN" />
+		<field name="productcategories" title="Category" />
+		<field name="salePrice" />
+		<field name="costPrice" />
+		<field name="gstRate" title="GST Rate" />
+
+
+	</grid>
+
+
+	<form model="com.axelor.app.gst.db.Product" title="Products" name="product-form">
+
+		<toolbar>
+			<button onClick="product_report" name="print-btn" title="Print" icon="fa-print" />
+			<button onClick="product_report_grid" name="print-btn" title="Print product List" icon="fa-print" />
+		</toolbar>
+
+
+		<panel title="Product">
+			<field name="productImage" widget="image" colSpan="8" title="Upload Image" />
+			<field name="productcategories" title="Category" onChange="action.method.product.gst" />
+			<field name="name" colSpan="6" />
+			<field name="code" />
+			<field name="HSBN" title="HSBN" />
+			<field name="costPrice" />
+			<field name="salePrice" />
+			<field name="gstRate" title="GST Rate" domain="self.productcategories = :productcategories" readonly="true" />
+		</panel>
+	</form>
+
+	<action-method name="action.method.product.gst">
+		<call class="com.axelor.app.gst.web.ProductController" method="SetGstRate" />
+	</action-method>
+
+	<action-view name="action.view.selected.product" title="Selectef Product" model="com.axelor.app.gst.db.Invoice">
+		<view type="form" name="invoice-form" />
+		<context name="ids" expr="eval:__ids__"/>
+	</action-view>
+
+	<action-report output="Product" name="product_report" design="product_reports_form.rptdesign">
+		<param name="productId" expr="eval:id" />
+	</action-report>
+
+	<action-report output="Product List" name="product_report_grid" design="product_reports_grid.rptdesign" />
+	
+	<action-validate name="action.product.onclick.create-btn">
+		<error message="No Product Selected" if="__this__.name == null"/>
+	</action-validate>
+
+</object-views>

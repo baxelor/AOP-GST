@@ -1,0 +1,63 @@
+<object-views xmlns="http://axelor.com/xml/ns/object-views"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+  
+	  	<grid model="com.axelor.app.gst.db.InvoiceLine" title="InlvoiceLine" name="invoice-line-grid">
+	  		<field name="product"/>	  		
+	  		<field name="item"/>
+	  		<field name="qty" title="Quantity"/>
+	  		<field name="price"/>
+	  		<field name="netAmount"/>
+	  		<field name="gstRate" title="GST Rate"/>
+	  		<field name="igst" />
+	  		<field name="sgst" />
+	  		<field name="cgst" />
+	  		<field name="grossAmount" title="Gross Amount"/>
+	  		<field name="hsbn" title="HSBN"/>
+	  	</grid>
+	  	
+	  	<form model="com.axelor.app.gst.db.InvoiceLine" title="InvoiceLines" name="invoice-line-form">
+	  			<panel>
+	  				<field name="product" onChange="action.group.conChange"/>
+	  				<field name="hsbn" title="HSBN"/>
+			  		<field name="item" readonly="true"/>
+			  		<field name="qty" title="Quantity" onChange="action.group.conChange"/>
+			  		<field name="price" readonly="true" />
+			  		<field name="netAmount" />
+			  		<field name="gstRate" title="GST Rate"/>
+			  		<field name="igst"/>
+			  		<field name="sgst" />
+			  		<field name="cgst"/>
+			  		<field name="grossAmount" readonly="true"/>
+	  			</panel>
+	  	</form>
+	  	
+	  	<action-group name="action.group.conChange">
+	  		<action name="action.getInvoiceline.gst"/>
+	  		<action name="action.method.netAmount"/>	
+	  		<action name="action.invoiceLine.all.gst"/>
+	  		<action name="action.method.grossAmount"/>  		
+	  	</action-group>
+	  	
+	  	<action-method name="action.getInvoiceline.gst">
+	  		<call class="com.axelor.app.gst.web.InvoiceLineController" method="SetInvoiceLineProperties"/>
+	  	</action-method>
+	  	
+	  	<action-method name="action.invoiceLine.netAmount">
+	  		<call class="com.axelor.app.gst.web.InvoiceLineController" method="CalculateNetAmount"/>
+	  	</action-method>
+	  	
+	  	<action-method name="action.invoiceLine.all.gst">
+	  		<call class="com.axelor.app.gst.web.InvoiceLineController" method="CalculateCSandIgst"/>
+	  	</action-method>
+	  	
+	  	<action-method name="action.method.grossAmount">
+	  		<call class="com.axelor.app.gst.web.InvoiceLineController" method="calculateGrossAmount"/>
+	  	</action-method>
+	  	
+	  	<action-method name="action.method.netAmount">
+	  		<call class="com.axelor.app.gst.web.InvoiceLineController" method="netAmount"/>
+	  	</action-method>
+	  	
+  </object-views>
